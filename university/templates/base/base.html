@@ -1,0 +1,31 @@
+{% load static %}
+{% load fontawesome_5 %}
+{% fontawesome_5_static %} 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}Default Title{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'bootstrap-5.3/css/bootstrap.min.css' %}">
+
+  {% block style %}{% endblock style %}
+</head>
+<body class='bg-dark-mode'>
+  {% for message in messages %}
+    {% if message.tags == 'error' %}
+    <div class='alert alert-danger alert-dismissable'>
+      {{  message }}
+    </div>
+    {% else %}
+    <div class='alert alert-success alert-dismissable'>
+      {{  message }}
+    </div>
+    {% endif %}
+  {% endfor %}
+  {% block content %}
+  {% endblock %}
+  
+</body>
+{% block javascripts %}{% endblock javascripts %}
+<script src="{% static 'bootstrap-5.3/js/bootstrap.bundle.min.js' %}"></script>
+</html>

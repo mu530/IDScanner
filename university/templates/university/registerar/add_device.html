@@ -1,0 +1,39 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Device Form{% endblock %}
+
+{% block content %}
+{% include 'base/header.html' with active_tab='staffs' %}
+{% include 'base/side_bar.html' with active_tab='staffs' %}
+
+{% load crispy_forms_tags %}
+
+
+  <div class="container-sm my-3 py-3">
+    <div class="row" id="main">
+      
+        <p>Add Device</p>
+        <form method="POST" action=''>
+          {% csrf_token %}
+          {{ form|crispy }}
+          <div class="d-md-flex justify-content-md-end">
+            <button name="submit" type="submit" class="btn btn-primary">Add</button>
+            <button type="button" class="btn btn-secondary" onclick="goBack()">Back</button>
+          </div>
+        </form> 
+      
+    </div>
+  </div>  
+
+
+{% include 'base/footer.html'%}
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+function goBack() {
+  window.history.back();
+}
+</script>
+{% endblock %}

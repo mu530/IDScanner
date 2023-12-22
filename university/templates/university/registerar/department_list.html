@@ -1,0 +1,92 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Department List{% endblock %}
+
+{% block content %}
+  {% include 'base/header.html' with active_tab='staffs' %}
+  {% include 'base/side_bar.html' with active_tab='staffs' %}
+
+  <div class="container" id="main">
+    <h1>Departments</h1>
+    <form method="get" class="mb-3">
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <label for="campus-filter">Filter campus:</label>
+          <select class="form-control" name="campus" id="campus-filter">
+            <option value="">All Campuses</option>
+            {% for campus in campuses %}
+              <option value="{{ campus.id }}" {% if selected_campus == campus.id %}selected{% endif %}>
+                {{ campus.name }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-4 mb-3">
+          <label for="field-filter">Filter field:</label>
+          <select class="form-control" name="field" id="field-filter">
+            <option value="">All Fields</option>
+            {% for field in fields %}
+              <option value="{{ field.id }}" {% if selected_field == field.id %}selected{% endif %}>
+                {{ field.name }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-3 mb-3">
+          <label for="search-query">Search:</label>
+          <div class="input-group">
+            <input type="text" class="form-control" name="q" placeholder="Search" value="{{ search_key }}">
+            <button type="submit" class="btn btn-primary">Search</button>
+          </div>
+        </div>
+        <div class="col-md-1 mb-3">
+          {% if is_filtered %}
+            <a href="{% url 'university:department-list' %}" class="btn btn-secondary">Clear</a>
+          {% endif %}
+        </div>
+      </div>
+    </form>
+    
+    <table class="table">
+      <thead>
+        <tr>
+          <th>
+            <a href="?{% if order_by == 'name' and not descending %}desc{% endif %}{% if is_filtered %}&{% endif %}orderBy=name">Department Name</a>
+            {% if order_by == 'name' %}
+              {% if descending %}<i class="fa fa-sort-down"></i>{% else %}<i class="fa fa-sort-up"></i>{% endif %}
+            {% endif %}
+          </th>
+          <th>
+            <a href="?{% if order_by == 'field' and not descending %}desc{% endif %}{% if is_filtered %}&{% endif %}orderBy=field">Field Name</a>
+            {% if order_by == 'field' %}
+              {% if descending %}<i class="fa fa-sort-down"></i>{% else %}<i class="fa fa-sort-up"></i>{% endif %}
+            {% endif %}
+          </th>
+          <th>
+            <a href="?{% if order_by == 'campus' and not descending %}desc{% endif %}{% if is_filtered %}&{% endif %}orderBy=campus">Campus Name</a>
+            {% if order_by == 'campus' %}
+              {% if descending %}<i class="fa fa-sort-down"></i>{% else %}<i class="fa fa-sort-up"></i>{% endif %}
+            {% endif %}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for department in departments %}
+          <tr>
+            <td>{{ department.name }}</td>
+            <td>{{ department.field.name }}</td>
+            <td>{{ department.field.campus.name }}</td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="3">No departments found.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    {% include 'base/pagination.html' with page_obj=departments %}
+    
+  </div>
+  {% include 'base/footer.html' %}
+{% endblock %}

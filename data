@@ -1,0 +1,78 @@
+
+from university.models import Address, Department, Student, EmergencyContact
+
+
+
+department = Department.objects.get(name='Department of Accounting and Finance')
+
+
+# Create an address object
+address = Address.objects.create(
+    telephone_phone='912345678',
+    email='selam@gmail.com',
+    country='Ethiopia',
+    region='Sidama',
+    state='Hawasa'
+)
+
+
+emergency_contact = EmergencyContact.objects.create(
+    name='solomon',
+    name_am='ሶሎሞን',
+    relationship='Father',
+    relationship_am='አባት',
+    phone_number='911234567',
+    country='Ethiopia',
+    region='Sidama',
+    state='Hawasa'
+)
+
+
+
+
+student = Student.objects.create(
+    first_name='Selam',
+    first_name_am='ሰላም',
+    last_name='Solomon',
+    last_name_am='ሶሎሞን',
+    date_of_birth='1998-10-03',
+    gender='F',
+    government_id_number='123456789',
+    department=department,
+    field = department.field,
+    emergency=emergency_contact,
+    address=address,
+    financial_aid=True,
+    is_cafe_user=True,
+    is_student_associative=False,
+    year=1
+)
+
+
+
+
+>>> from university.models import Student
+>>> from faker import Faker
+>>> fake = Faker()
+>>> for i in range(3):
+...     student = Student()
+...     student.first_name = fake.first_name()
+...     student.first_name_am = fake.name()
+...     student.last_name = fake.last_name()
+...     student.last_name_am = fake.name()
+...     student.photo = fake.image_url()
+...     student.date_of_birth = fake.date_of_birth(minimum_age=18)
+...     student.gender = fake.random_element(elements=('M', 'F'))
+...     student.government_id_number = fake.ssn()
+...     student.department = Department.objects.order_by('?').first()
+...     student.field = Field.objects.order_by('?').first()
+...     student.emergency = EmergencyContact.generate_emergency_contact()
+...     student.registration_date = fake.date_time_this_year()
+...     student.address = Address.generate_address()
+...     student.financial_aid = fake.boolean()
+...     student.is_cafe_user = fake.boolean()
+...     student.is_student_associative = fake.boolean()
+...     student.is_active = fake.boolean()
+...     student.year = fake.random_int(min=1, max=5)
+...     student.save()
+...

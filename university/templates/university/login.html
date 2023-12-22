@@ -1,0 +1,50 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Log in{% endblock %}
+
+{% block content %}
+
+
+<!-- Section: Design Block -->
+<div class="container-lg d-flex justify-content-center my-5">
+  <form class="shadow p-5 mb-5 bg-body rounded" method="POST">
+    {% csrf_token %}
+    <div class="d-flex  justify-content-center align-items-center mb-3 pb-1">
+      <img src="{% static 'ID_system/media/UoG_logo.png' %}" alt="" style="height: 100px; object-fit: contain; border-radius: 10px;">
+    </div>
+    <h4>Login</h4>
+    <div class="form-outline mb-4">
+      <label class="form-label" for="id_username">Username</label>
+      <input type="text" id="id_username" name="username" class="form-control form-control-lg" required/>
+    </div>
+    <div class="form-outline mb-4">
+      <label class="form-label">Password</label>
+      <div class="input-group mb-3">
+        <input class="form-control form-control-lg" id="password" class="block mt-1 w-full" type="password" name="password" required />
+        <button class="btn btn-outline-secondary" type="button" id="show-password-btn" onclick="showHide()">
+          <i class="bi bi-eye">show</i>
+        </button>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Login</button>
+  </form>
+</div>
+
+<script>
+function showHide() {
+  let x = document.getElementById("password");
+  let showHide = document.getElementById("show-password-btn");
+  if (x.type === "password") {
+    x.type = "text";
+    showHide.innerHTML = 'Hide';
+  } else {
+    x.type = "password";
+    showHide.innerHTML = 'Show';
+  }
+}
+</script>
+
+{% include 'base/footer.html' %}
+
+{% endblock %}

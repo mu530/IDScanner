@@ -1,0 +1,117 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Library Admin{% endblock %}
+
+{% block content %}
+{% include 'base/header.html' with active_tab='library' %}
+{% include 'base/side_bar.html' with active_tab='library' %}
+
+<div class="container" id="main">
+  <div class="row">
+    <div class="col-md-3">
+      <div class="card mb-3">
+        <div class="card-header">
+          Filter Libraries
+        </div>
+        <div class="card-body">
+          <form method="GET">
+            <div class="form-group">
+              <label for="search">Search by student or book:</label>
+              <input type="text" class="form-control" id="search" name="search" placeholder="Search" value="{{ request.GET.search }}">
+            </div>
+            <div class="form-group">
+              <label for="rental_date">Filter by Rental Date:</label>
+              <select class="form-control" id="rental_date" name="rental_date">
+                <option value="">All</option>
+                <option value="today" {% if request.GET.rental_date == 'today' %}selected{% endif %}>Today</option>
+                <option value="this_week" {% if request.GET.rental_date == 'this_week' %}selected{% endif %}>This week</option>
+                <option value="this_month" {% if request.GET.rental_date == 'this_month' %}selected{% endif %}>This month</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Filter</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-9">
+      <h1 class="my-4">Library List</h1>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>
+              <a href="?sort=student{% if sort_by == 'student' %}&dir={{ sort_dir }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.rental_date %}&rental_date={{ request.GET.rental_date }}{% endif %}" class="text-dark">
+                Student{% if sort_by == 'student' %} {% if sort_dir == 'asc' %}<i class="fas fa-arrow-up"></i>{% else %}<i class="fas fa-arrow-down"></i>{% endif %}{% endif %}
+              </a>
+            </th>
+            <th>
+              <a href="?sort=book{% if sort_by == 'book' %}&dir={{ sort_dir }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.rental_date %}&rental_date={{ request.GET.rental_date }}{% endif %}" class="text-dark">
+                Book{% if sort_by == 'book' %} {% if sort_dir == 'asc' %}<i class="fas fa-arrow-up"></i>{% else %}<i class="fas fa-arrow-down"></i>{% endif %}{% endif %}
+              </a>
+            </th>
+            <th>
+              <a href="?sort=taken_date{% if sort_by == 'taken_date' %}&dir={{ sort_dir }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.rental_date %}&rental_date={{ request.GET.rental_date }}{% endif %}" class="text-dark">
+                Taken Date{% if sort_by == 'taken_date' %} {% if sort_dir == 'asc' %}<i class="fas fa-arrow-up"></i>{% else %}<i class="fas fa-arrow-down"></i>{% endif %}{% endif %}
+              </a>
+            </th>
+            <th>Returned</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for library in libraries %}
+          <tr>
+            <td>{{ library.student }}</td>
+            <td>{{ library.book }}</td>
+            <td>{{ library.taken_date }}</td>
+            <td>
+              {% if not library.returned %}
+              <form action="{% url 'university:library-return' library.pk %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary">Mark as returned</button>
+              </form>
+              {% else %}
+              Returned
+              {% endif %}
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="4">No libraries found.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% if libraries.has_other_pages %}
+      <nav aria-label="Library pages">
+        <ul class="pagination justify-content-center">
+          {% if libraries.has_previous %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ libraries.previous_page_number }}{% if sort_by %}&sort={{ sort_by }}{% endif %}{% if sort_dir %}&dir={{ sort_dir }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.rental_date %}&rental_date={{ request.GET.rental_date }}{% endif %}" aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+              <span class="sr-only">Previous</span>
+            </a>
+          </li>
+          {% endif %}
+          {% for page in libraries.paginator.page_range %}
+          {% if libraries.number == page %}
+          <li class="page-item active"><a class="page-link">{{ page }}</a></li>
+          {% else %}
+          <li class="page-item"><a class="page-link" href="?page={{ page }}{% if sort_by %}&sort={{ sort_by }}{% endif %}{% if sort_dir %}&dir={{ sort_dir }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.rental_date %}&rental_date={{ request.GET.rental_date }}{% endif %}">{{ page }}</a></li>
+          {% endif %}
+          {% endfor %}
+          {% if libraries.has_next %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ libraries.next_page_number }}{% if sort_by %}&sort={{ sort_by }}{% endif %}{% if sort_dir %}&dir={{ sort_dir }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.rental_date %}&rental_date={{ request.GET.rental_date }}{% endif %}" aria-label="Next">
+              <span aria-hidden="true">&raquo;</span>
+              <span class="sr-only">Next</span>
+            </a>
+          </li>
+          {% endif %}
+        </ul>
+      </nav>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}

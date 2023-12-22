@@ -1,0 +1,34 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Cafe Form{% endblock %}
+
+{% block content %}
+{% include 'base/header.html' with active_tab='cafe' %}
+{% include 'base/side_bar.html' with active_tab='cafe' %}
+
+<div class="container" id="main">
+  <h1 class="my-4">Delete Coupon "{{ coupon.coupon_type }}"?</h1>
+  
+  <div class="alert alert-danger">
+    <p>Are you sure you want to delete this coupon? The following students will lose access to this coupon:</p>
+    <ul class="list-group">
+      {% for student in students %}
+        <li class="list-group-item">{{ student }}</li>
+      {% empty %}
+        <li class="list-group-item">No students have this coupon.</li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <form method="post" class="d-inline-block">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Delete</button>
+  </form>
+
+  <a href="{{ request.META.HTTP_REFERER }}" class="btn btn-secondary">Cancel</a>
+</div>
+
+{% include 'base/footer.html' %}
+
+{% endblock %}

@@ -1,0 +1,80 @@
+
+<div class="container">
+  <div class="col d-md-flex justify-content-md-end">
+    <a href="{% url 'university:cafe-form' %}" class="btn btn-primary mx-3">Add Meal Service</a>
+  </div>
+  <div class="container text-center">
+    <div class="card text-white bg-dark mb-3" style="max-width: 18rem;">
+      <div class="card-body">
+        <h5 class="card-title text-center">List of {{ meal_time|capfirst }} meal Period</h5>
+      </div>
+    </div>
+  </div>
+  
+  <form class="form-inline float-right" method="get" action="">
+    <div class="input-group">
+      <a href="{% url 'university:cafe-manager' %}" class="btn btn-outline-primary">View Current Meal</a>
+      <input type="search" class="form-control rounded" name="query" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+      <select class="select" data-mdb-filter="true" name="meal_time">
+        <option value="all">All</option>
+        {% for meal_period in meal_periods %}       
+          <option value="{{ meal_period.meal_period }}">{{ meal_period.meal_period }}</option>
+        {% endfor %}
+      </select>
+      <button type="submit" class="btn btn-outline-primary mr-2">search</button>
+    </div>
+  </form>
+
+  <div class="table-responsive">
+    <table class="table m-3">
+      <thead class="thead-light">
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Stdent Name</th>
+          <th scope="col">Student ID</th>
+          <th class="d-none d-md-table-cell" scope="col">Meal</th>
+          <th class="d-none d-md-table-cell" scope="col" >Meal Period</th>
+          <th scope="col">Eat</th>
+          <th scope="col">Special</th>
+          <th scope="col"></th>
+
+        </tr>
+      </thead>
+      <tbody>
+        {% for service in cafe_services %}
+          <tr>
+            <th scope="row">{{ forloop.counter }}</th>
+            <td><a href='{% url "university:cafe-student-detail" service.student.student_id %}' class="text-decoration-none">{{ service.student.full_name }}</a></td>
+            <td>{{ service.student.student_id }}</td>
+            <td class="d-none d-md-table-cell">{{ service.meal.meal_period }}</td>
+            <td class="d-none d-md-table-cell">{{ service.meal.time }}</td> 
+            <td>{% if service.has_eaten %}
+                  Yes
+                {% else %}
+                  No
+                {% endif %}
+            </td>
+            <td>{% if service.special %}
+                  Yes
+                {% else %}
+                  No
+                {% endif %}
+            </td>
+            <td>
+              {% if not service.has_eaten %}
+                <a class='btn btn-small btn-danger py-0' href='{% url "university:eat-meal" service.id %}'>Eat</a>
+              {% endif %}
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="3">No Student found.</td>
+          </tr>
+        {% endfor %}
+        
+      </tbody>
+    </table>
+    {% include 'base/pagination.html' with page_obj=cafe_services %}
+  </div>
+
+</div>

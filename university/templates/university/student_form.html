@@ -1,0 +1,43 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Students{% endblock %}
+
+{% block content %}
+{% include 'base/header.html' with active_tab='staffs' %}
+
+{% include 'base/side_bar.html' with active_tab='staffs' %}
+
+
+{% load crispy_forms_tags %}
+
+<div class="container-sm my-3 py-3" id="main">
+
+  <form action="" method="POST" enctype="multipart/form-data" class="row g-3">
+    {% csrf_token %}
+    <div class="col-lg-6">
+      <div class="">Student Form</div>
+      {{ student_form | crispy }}
+
+      <div class="">Student Address Form</div>
+      {{ address_form | crispy }}
+    </div>
+    <div class="col-lg-6">
+      <div class="">Emergency Form</div>
+      {{ emergency_form | crispy }}
+    </div>
+    {% if  action  == 'Register' %} 
+    <button name="submit" class="btn btn-outline-danger" type="submit">Register</button>
+    {% else %}
+    <button name="submit" class="btn btn-outline-warning" type="submit">Update</button>
+    {% endif %}
+
+  </form>
+
+</div>
+
+
+{% include 'base/footer.html'%}
+
+
+{% endblock %}

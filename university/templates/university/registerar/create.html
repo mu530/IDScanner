@@ -1,0 +1,56 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Cafe Form{% endblock %}
+
+{% block content %}
+{% include 'base/header.html' with active_tab='staffs' %}
+{% include 'base/side_bar.html' with active_tab='staffs' %}
+
+{% load crispy_forms_tags %}
+
+
+  <div class="container-sm my-3 py-3">
+    <div class="row" id="main">
+      
+      <div class="col-md-4">
+        <p>Add New Campus</p>
+        <form method="POST" action=''>
+          {% csrf_token %}
+          {{ campus_form|crispy }}
+          <p>Add Campus Address</p>
+          {{ address_form|crispy }}
+          <div class="d-md-flex justify-content-md-end">
+            <button name="campus_submit" type="submit" class="btn btn-primary">Submit</button>
+          </div>
+        </form> 
+      </div>
+
+      <div class="col-md-4">
+        <p>Add New Field</p>
+        <form method="POST" action=''>
+          {% csrf_token %}
+          {{ field_form|crispy }}
+          <div class="d-md-flex justify-content-md-end">
+            <button name="field_submit" type="submit" class="btn btn-primary">Submit</button>
+          </div>
+        </form> 
+      </div>
+
+      <div class="col-md-4">
+        <p>Add New Department</p>
+        <form method="POST" action=''>
+          {% csrf_token %}
+          {{ department_form|crispy }}
+          <div class="d-md-flex justify-content-md-end">
+            <button name="department_submit" type="submit" class="btn btn-primary">Submit</button>
+          </div>
+        </form> 
+      </div>
+      
+    </div>
+  </div>  
+
+
+{% include 'base/footer.html' %}
+
+{% endblock %}

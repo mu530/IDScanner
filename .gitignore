@@ -1,0 +1,6 @@
+venv/
+db.sqlite3
+.idea/
+.vscode/
+ER_diagram.pdf
+my_project_visualized.png

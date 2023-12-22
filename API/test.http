@@ -1,0 +1,29 @@
+POST http://127.0.0.1:8000/signup 
+Content-Type: application/json
+
+{ "username": "admin", "password": "Pass1234!", "email": "adam@mail.com" }
+
+###
+
+POST http://192.168.101.32:8000/api/auth/ 
+Content-Type: application/json
+
+{ "username": "admin", "password": "admin" }
+
+###
+
+GET http://192.168.101.32:8000/api/student/UoG|B5119|23
+Content-Type: application/json 
+###
+
+PUT http://192.168.101.32:8000/api/cafe_attendance/
+Content-Type: application/json 
+
+{ "student_id": "UoG|B5119|23", "meal_id": 2 }
+
+###
+
+
+GET http://192.168.101.32:8000/api/student/UoG|B5119|23
+Content-Type: application/xml
+Authorization: token 243b95c3378b8007131663100d97f78e1bfdde90

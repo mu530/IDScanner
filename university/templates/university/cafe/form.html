@@ -1,0 +1,54 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Cafe Form{% endblock %}
+
+{% block content %}
+{% include 'base/header.html' with active_tab='cafe' %}
+{% include 'base/side_bar.html' with active_tab='cafe' %}
+
+{% load crispy_forms_tags %}
+
+
+  <div class="container-sm my-3 py-3">
+    <div class="row" id="main">
+      
+      <div class="col-md-4">
+        <p>Add Meal Periods</p>
+        <form method="POST" action=''>
+          {% csrf_token %}
+          {{ meal_period_form|crispy }}
+          <div class="d-md-flex justify-content-md-end">
+            <button name="meal_period_submit" type="submit" class="btn btn-primary">Submit</button>
+          </div>
+        </form> 
+      </div>
+
+      <div class="col-md-4">
+        <p>Add Meal Service Program</p>
+        <form method="POST" action=''>
+          {% csrf_token %}
+          {{ meal_form|crispy }}
+          <div class="d-md-flex justify-content-md-end">
+            <button name="meal_submit" type="submit" class="btn btn-primary">Submit</button>
+          </div>
+        </form> 
+      </div>
+
+      <div class="col-md-4">
+        <p>Add Meal Service</p>
+        <form method="POST" action=''>
+          {% csrf_token %}
+          {{ cafe_attendance_form|crispy }}
+          <div class="d-md-flex justify-content-md-end">
+            <button name="cafe_attendance_submit" type="submit" class="btn btn-primary">Submit</button>
+          </div>
+        </form> 
+      </div>
+      
+    </div>
+  </div>  
+
+
+{% include 'base/footer.html'%}
+
+{% endblock %}

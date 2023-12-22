@@ -1,0 +1,40 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Students Disciplinary record{% endblock %}
+
+{% block content %}
+{% include 'base/header.html' with active_tab='disciplin' %}
+
+
+<div class="container">
+    <div class="row">
+        <h1 class="col-9">Disciplinary Records</h1>
+        <div class="col-3">
+            <a href='{% url "university:disciplin-form" student_id %}?next_page={{ current_url }}' class='btn btn-danger'> Add Record</a>
+        </div>
+    </div>
+  <table class="table table-striped">
+      <thead>
+          <tr>
+              <th>Staff</th>
+              <th>Reason</th>
+              <th>Date</th>
+          </tr>
+      </thead>
+      <tbody>
+          {% for record in records %}
+              <tr>
+                  <td>{{ record.staff }}</td>
+                  <td>{{ record.reason|truncatechars:50 }}</td>
+                  <td>{{ record.date }}</td>
+              </tr>
+          {% endfor %}
+      </tbody>
+  </table>
+  {% include 'base/pagination.html' with page_obj=records  %}
+</div>
+
+{% include 'base/footer.html'  %}
+
+{% endblock %}

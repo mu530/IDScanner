@@ -1,0 +1,58 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Students{% endblock %}
+
+{% block content %}
+{% include 'base/header.html' with active_tab='disciplin' %}
+
+
+  <div class="container" id="main">
+    <h1 class="mt-4 mb-4">Student List</h1>
+
+    <form method="get" class="mb-4">
+      <div class="input-group">
+        <input type="text" class="form-control" name="q" value="{{ query }}" placeholder="Search students...">
+        <div class="input-group-append">
+          <button type="submit" class="btn btn-primary">Search</button>
+          <a href="{% url 'university:disciplin-student-list' %}" class="btn btn-secondary">Clear</a>
+        </div>
+      </div>
+    </form>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Full Name</th>
+          <th class="d-none d-sm-table-cell">Campus</th>
+          <th>Department</th>
+          <th class="d-none d-sm-table-cell">Field</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for student in students %}
+          <tr>
+            <td>{{ student.student_id }}</td>
+            <td>{{ student.full_name }}</td>
+            <td class="d-none d-sm-table-cell">{{ student.field.campus }}</td>
+            <td>{{ student.department }}</td>
+            <td class="d-none d-sm-table-cell">{{ student.field }}</td>
+
+            <td><a href="{% url 'university:disciplin-form' student.student_id %}" class="btn btn-danger btn-small">Add Record</a></td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="4">No students found.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    {% include 'base/pagination.html' with page_obj=students %}
+  </div>
+
+  {% include 'base/footer.html' %}
+
+{% endblock %}

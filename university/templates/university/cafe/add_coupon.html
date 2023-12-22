@@ -1,0 +1,29 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Cafe Form{% endblock %}
+
+{% block content %}
+{% include 'base/header.html' with active_tab='cafe' %}
+
+{% include 'base/side_bar.html' with active_tab='cafe' %}
+
+{% load crispy_forms_tags %}
+
+
+  <div class="container-sm my-3 py-3">
+    <div class="row" id="main">
+      <p>Create Coupon</p>
+      <form method="POST" action=''>
+        {% csrf_token %}
+        {{ coupon_form|crispy }}
+        <div class="d-md-flex justify-content-md-end">
+          <button name="coupon_submit" type="submit" class="btn btn-primary">Submit</button>
+        </div>
+      </form> 
+    </div>
+  </div>  
+
+
+{% include 'base/footer.html' %}
+
+{% endblock %}

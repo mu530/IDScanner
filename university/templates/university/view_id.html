@@ -1,0 +1,111 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}{{ student }} ID Card{% endblock %}
+
+{% block content %}
+{% include 'base/header.html' with active_tab='staffs' %}
+
+{% include 'base/side_bar.html' with active_tab='staffs' %}
+
+<style>
+  @media print {
+  /* Hide the header and footer */
+  header, footer {
+    display: none;
+  }
+
+  /* Set the size of the card to match a standard vertical ID card */
+  #card {
+    display: block;
+    width: 2.125in;
+    height: 3.375in;
+    margin: 0 auto;
+  }
+}
+</style>
+
+<div class="container text-center" id="main">
+  <div class="text-center" id="id-card">
+    <div class="col-12 col-sm-12 col-md-6 col-lg-4">
+      <div class="card m-3" style="height: 360px; width: 210px;">
+        <div class="card-header row bg-warning m-0 p-0">
+          <div class="col-3 p-0">
+            <img src="{% static 'ID_system/media/UoG_logo.png' %}" alt="" 
+              alt="Generic placeholder image" class="img-fluid"
+              style="height: 20px; object-fit: contain; border-radius: 10px;">
+          </div>
+          <div class="col-9 p-0 d-flex align-items-center">
+            <p class="p-0 m-0 small">University of Gondar</p>
+          </div>
+        </div>
+      
+        <div class="card-body m-0">
+          <div class="text-center">
+            <img src="{{ student.photo.url }}" alt=""
+              class="img-fluid"
+              style="height: 120px; width: 96px; object-fit: cover; border-radius: 10px;">
+          </div>
+          <div class="text-start">
+            <p class="p-0 m-0">Name: {{ student.first_name }} {{ student.last_name }}</p>
+            <p class="p-0 m-0">Faculty: {{ student.academic_program }}</p>
+            <p class="p-0 m-0">ID: {{ student.student_id }}</p>
+          </div>
+          <div class="text-center m-0 p-0">
+            <img src="{{ student.qr_code.url }}" alt=""
+              alt="Generic placeholder image" class="img-fluid m-0"
+              style="height: 90px; object-fit: cover;">
+          </div>
+        </div>
+        <div class="card-footer text-muted m-0 p-0">
+          <p class="m-0 p-0 small">expired date: 20/5/23</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-sm-12 col-md-6 col-lg-4">
+      <div class="card m-3" style="height: 360px; width: 210px;">
+        <div class="card-header row bg-warning m-0 p-0">
+          <div class="col-3 p-0">
+            <img src="{% static 'ID_system/media/UoG_logo.png' %}" alt="" 
+              alt="Generic placeholder image" class="img-fluid"
+              style="height: 20px; object-fit: contain; border-radius: 10px;">
+          </div>
+          <div class="col-9 p-0 d-flex align-items-center">
+            <p class="p-0 m-0 small">University of Gondar</p>
+          </div>
+        </div>
+      
+        <div class="card-body m-0">
+          
+          <div class="text-start">
+            <p class="p-0 m-0">This is Students ID</p>
+          </div>
+          <div class="text-center m-0 p-0">
+            <img src="{{ student.qr_code.url }}" alt=""
+              alt="Generic placeholder image" class="img-fluid m-0"
+              style="height: 200px; object-fit: cover;">
+          </div>
+        </div>
+        <div class="card-footer text-muted m-0 p-0">
+          <p class="m-0 p-0 small">expired date: 20/5/23</p>
+        </div>
+      </div>
+    </div>  
+  </div> 
+  <button onclick="printCard()">Print Card</button>     
+</div>
+<script>
+  function printCard() {
+  var printContents = document.getElementById('id-card').innerHTML;
+  var originalContents = document.body.innerHTML;
+
+  document.body.innerHTML = printContents;
+  window.print();
+
+  document.body.innerHTML = originalContents;
+}
+</script>
+
+{% include 'base/footer.html' with active_tab='home' %}
+
+{% endblock %}

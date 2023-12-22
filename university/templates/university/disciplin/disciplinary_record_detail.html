@@ -1,0 +1,27 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Students{% endblock %}
+
+{% block content %}
+{% include 'base/header.html' with active_tab='disciplin' %}
+
+<div class="container">
+  <h1 class="text-center my-4">Disciplinary Record Detail</h1>
+  <div class="card">
+      <div class="card-body">
+          <h5 class="card-title"><a class="text-decoration-none" href={% url 'university:student-profile' record.student.student_id %}>{{ record.student }}</a></h5>
+          <h6 class="card-subtitle mb-2 text-muted">Recorded By: {{ record.staff }}</h6>
+          <p class="card-text">{{ record.reason|safe }}</p>
+          <p class="card-text"><small class="text-muted">Date: {{ record.date }}</small></p>
+          <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <a href="{% url 'university:disciplin-form' record.student.student_id %}" class="btn btn-danger text-black">Add Other Discipline Recored</a>
+        </div>
+      </div>
+  </div>
+</div>
+
+
+{% include 'base/footer.html' %}
+
+{% endblock %}

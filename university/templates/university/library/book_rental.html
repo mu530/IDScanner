@@ -1,0 +1,59 @@
+<!-- book_rental.html -->
+{% extends 'base/base.html' %}
+
+{% block title %}Book Rent{% endblock %}
+
+{% block content %}
+
+{% include 'base/header.html' with active_tab='library' %}
+{% include 'base/side_bar.html' with active_tab='library' %}
+
+<div class="container" id="main">
+  <h1 class="text-center mb-5">Book Rental</h1>
+  <form class="mb-5">
+    <div class="form-group row">
+      <div class="col-sm-10">
+        <input type="text" class="form-control" name="q" placeholder="Search...">
+      </div>
+      <div class="col-sm-2">
+        <button type="submit" class="btn btn-primary">Search</button>
+      </div>
+    </div>
+  </form>
+  {% if books %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Author</th>
+          <th>ISBN</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for book in books %}
+          <tr>
+            <td>{{ book.title }}</td>
+            <td>{{ book.author }}</td>
+            <td>{{ book.isbn }}</td>
+            <td>
+              <form method="POST" action="{% url 'university:rent-book' student_id=student.student_id book_id=book.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary">Rent</button>
+              </form>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="4">No books found.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+</div>
+
+
+{% include 'base/footer.html' %}
+
+{% endblock %}

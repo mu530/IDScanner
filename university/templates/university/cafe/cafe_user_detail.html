@@ -1,0 +1,88 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Cafe Form{% endblock %}
+
+{% block content %}
+{% include 'base/header.html' with active_tab='cafe' %}
+{% include 'base/side_bar.html' with active_tab='cafe' %}
+
+<div class="container my-3" id="main">
+  <a href="{% url 'university:cafe-manager' %}" class="btn btn-primary"><i class="fas fa-home"></i> Cafe Dashboard</a>
+  <h1>{{ student.first_name }} {{ student.last_name }}</h1>
+  <div class="row">
+    <div class="col-md-6">
+      <img src="{{ student.photo.url }}" alt="{{ student.first_name }} {{ student.last_name }}" class="img-fluid">
+      <p>{{ student.email }}</p>
+      <p>{{ student.phone }}</p>
+      <p>{{ student.address }}</p>
+    </div>
+    <div class="col-md-6">
+      <dl class="row">
+        <dt class="col-sm-3">ID</dt>
+        <dd class="col-sm-9">{{ student.student_id }}</dd>
+        <dt class="col-sm-3">Date of Birth</dt>
+        <dd class="col-sm-9">{{ student.date_of_birth }}</dd>
+        <dt class="col-sm-3">Gender</dt>
+        <dd class="col-sm-9">{{ student.get_gender_display }}</dd>
+        <dt class="col-sm-3">Department</dt>
+        <dd class="col-sm-9">{{ student.department }}</dd>
+        <dt class="col-sm-3">Field</dt>
+        <dd class="col-sm-9">{{ student.field }}</dd>
+        <dt class="col-sm-3">Cafe User</dt>
+        <dd class="col-sm-9">{% if student.is_cafe_user %}Yes{% else %}No{% endif %}</dd>
+        <dt class="col-sm-3">Financial Aid</dt>
+        <dd class="col-sm-9">{% if student.financial_aid %}Yes{% else %}No{% endif %}</dd>
+        <dt class="col-sm-3"></dt>
+        <dd class="col-sm-9">{% if student.is_student_associative %}Student Association Member{% else %}{% endif %}</dd>
+      </dl>
+      <a href="{% url 'university:disciplin-form' student.student_id %}" class="btn btn-danger text-black">Add Discipline Recored</a>
+    </div>
+  </div>
+
+  <div class="row">
+    
+    <div class="col-md-4">
+      <h5>{{ student }} Attendance</h5>
+      <canvas id="attendanceChart"></canvas>
+    </div>
+
+    <div class="col-md-8">
+      {% if disciplinary_record %}
+      
+        <h5>Disciplinary Records from Cafe Staff</h5>
+
+        {% for disciplinary_record in disciplinary_records %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">{{ disciplinary_record.date }}</h5>
+                    <p class="card-text">{{ disciplinary_record.reason }}</p>
+                    <p class="card-text">Recored added by: {{ disciplinary_record.staff__first_name }} {{ disciplinary_record.staff__last_name }}</p>
+                </div>
+            </div>
+        {% endfor %}
+      {% else %}
+            <h5>No Disciplinary Recordes in Cafe</h5>
+      {% endif %}
+    </div>
+  </div>
+  
+
+  
+
+</div>
+
+  {% block javascripts %}
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.3.2/dist/chart.min.js"></script>
+  <script src="{% static 'ID_system/js/createAttendanceChart.js' %}"></script>
+  <script>
+    var dates = {{ dates|safe }};
+    var attendanceCounts = {{ attendance_counts }};
+    createAttendanceChart(dates, attendanceCounts);
+  </script>
+
+  {% endblock javascripts %}
+    
+{% include 'base/footer.html' %}
+
+{% endblock %}

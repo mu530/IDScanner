@@ -1,0 +1,158 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}{{ student }} Profile {% endblock %}
+
+{% block content %}
+{% include 'base/header.html' with active_tab='staffs' %}
+
+{% include 'base/side_bar.html' with active_tab='staffs' %}
+<div class="container" id="main">
+    <a href="{% url 'university:student-profile-update' student.student_id %}" class="btn btn-primary m-3 text-black">Update</a>
+    <a href="{% url 'university:disciplin-list' student.student_id %}" class="btn btn-primary m-3 text-black">Show Disciplinary recoreds</a>
+    <a href="{% url 'university:disciplin-form' student.student_id %}" class="btn btn-danger m-3 text-black">Add Disciplinary recored</a>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h4 class="card-title">Personal Information</h4>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <img class="card-img-top" src="{{ student.photo.url }}" alt="Student Photo" style="max-width: 120%; height: auto;">
+                        </div>
+                        <div class="col-md-3">
+                        <p class="card-text"><strong>Student ID:</strong> {{ student.student_id }}</p>
+                        <p class="card-text"><strong>Date of Birth:</strong> {{ student.date_of_birth }}</p>
+                        <p class="card-text"><strong>Gender:</strong> {{ student.get_gender_display }}</p>
+                        <p class="card-text"><strong>Government ID Number:</strong> {{ student.government_id_number }}</p>
+                        <p class="card-text"><strong>Address:</strong> {{ student.address }}</p>
+                        </div>
+                        <div class="col-md-3">
+                            <p class="card-text"><strong>Age:</strong> {{ student.age }}</p>
+                            <p class="card-text"><strong>Registered At:</strong> {{ student.registration_date }}</p>
+                            <p class="card-text"><strong>Email:</strong><a class="text-decoration-none text-dark" href="mailto:{{ student.address.email }}"> {{ student.address.email }}</a> </p>
+                            <p class="card-text"><strong>Phone Number:</strong><a class="text-decoration-none text-dark" href="tel:{{ student.address.phone_number }}">{{ student.address.phone_number }}</a> </p>
+                        </div>
+                        <div class="col-md-2">
+                            <img class="card-img-top" src="{{ student.qr_code.url }}" alt="Student QR Code" style="max-width: 50%; height: auto;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+   
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 ">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h4 class="card-title">Academic Information</h4>
+                    <p class="card-text"><strong>Department:</strong> {{ student.department }}</p>
+                    <p class="card-text"><strong>Field:</strong> {{ student.field }}</p>
+                    <p class="card-text"><strong>Registration Date:</strong> {{ student.registration_date }}</p>
+                    <p class="card-text"><strong>Financial Aid:</strong> {% if student.financial_aid %}Yes{% else %}No{% endif %}</p>
+                    <p class="card-text"><strong>Cafeteria User:</strong> {% if student.is_cafe_user %}Yes{% else %}No{% endif %}</p>
+                    <p class="card-text"><strong>Student Associative:</strong> {% if student.is_student_associative %}Yes{% else %}No{% endif %}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h4 class="card-title">Emergency Contacts</h4>
+                    <p class="card-text"><strong>Name:</strong> {{ student.emergency.name }} ( {{ student.emergency.name_am }} )</p>
+                    <p class="card-text"><strong>Relationship:</strong> {{ student.emergency.relationship }} ( {{ student.emergency.relationship_am }} )</p>
+                    <p class="card-text"><strong>Phone Number:</strong> <a href="tel:{{ student.emergency.phone_number }}" class="text-decoration-none text-dark"> {{ student.emergency.phone_number }} </a></p>
+                    <p class="card-text"><strong>Address:</strong> {{ student.emergency.address }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <h2>Devices</h2>
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Type</th>
+                  <th>Model</th>
+                  <th>Serial number</th>
+                  <th>Date registered</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for device in devices %}
+                <tr>
+                    <td>{{ device.device_type }}</td>
+                    <td>{{ device.device_model }}</td>
+                    <td>{{ device.serial_number }}</td>
+                    <td>{{ device.date_added }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="2">No devices found.</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            <div class="d-md-flex justify-content-md-end mt-3">
+              <a href="{% url 'university:add-device' student.id %}" class="btn btn-primary">Add Device</a>
+            </div>
+        </div>
+
+    </div>
+    
+
+    <div class="card mb-3">
+        <div class="no-gutters">
+            <div class="card-body">
+                <h5 class="card-subtitle mb-2 text-muted">Disciplinary Records</h5>
+    
+                <!-- Display the search form -->
+                <form method="get" action="{% url 'university:student-profile' student.student_id %}">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="q" value="{{ search_query }}" placeholder="Search disciplinary records">
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-outline-secondary">search</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+    
+                <table class="table">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>Date</th>
+                            <th>Reason</th>
+                            <th>Staff</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if disciplinary_records %}
+                            {% for record in disciplinary_records %}
+                                <tr>
+                                    <td><a class="text-decoration-none" href={% url 'university:disciplin-recored-detail' record.id %}>{{ record.reason|safe|truncatechars_html:50 }}</a></td>
+                                    <td>{{ record.date }}</td>
+                                    <td class="fit-text">{{ record.staff.get_full_name }}</td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="3">No disciplinary records found.</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+    
+                <!-- Display the pagination links -->
+                {% include 'base/pagination.html' with page_obj=disciplinary_records %}
+            </div>
+        </div>
+    </div>
+</div>
+{% include 'base/footer.html' %}
+
+{% endblock %}

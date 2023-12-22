@@ -1,0 +1,25 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Cafe Admin{% endblock %}
+
+{% block content %}
+{% include 'base/header.html' with active_tab='cafe' %}
+
+{% include 'base/side_bar.html' with active_tab='cafe' %}
+
+<div class="container" id="main">
+  <div class="d-none d-md-block">
+
+    {% include 'university/cafe/dashboard.html' %}
+  </div>
+
+ <div class="my-3">
+  {% include 'university/cafe/student_list.html' %}
+ </div> 
+  {% include 'university/cafe/coupon.html' %}
+
+</div>
+
+{% include 'base/footer.html' with active_tab='home' %}
+
+{% endblock %}

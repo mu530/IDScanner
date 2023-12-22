@@ -1,0 +1,58 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Cafe Form{% endblock %}
+
+{% block content %}
+{% include 'base/header.html' with active_tab='cafe' %}
+{% include 'base/side_bar.html' with active_tab='cafe' %}
+
+
+<div class="container">
+  <div class="row" id="main">
+    <div class="col-md-6">
+      <h1>{{ coupon.coupon_type }} Coupon</h1>
+      <p>Description: {{ coupon.description }}</p>
+      <p>Expiration Date: {{ coupon.expiration_date }}</p>
+    </div>
+  </div>
+
+  <div class="row mt-3">
+    <div class="col-md-6">
+      <h2>Students</h2>
+      {% if students %}
+      <div class="accordion" id="accordionExample">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingOne">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+              Toggle Student List
+            </button>
+          </h2>
+          <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+              <ul class="list-group mt-3">
+                {% for student in students %}
+                  <li class="list-group-item">{{ student.student_number }} - {{ student.first_name }} {{ student.last_name }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+        </div>      
+      </div>
+      {% else %}
+        <p>No students assigned to this coupon.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="row mt-3">
+    <div class="col-md-6">
+      <a href="{{ request.META.HTTP_REFERER }}" class="btn btn-secondary">Back</a>
+    </div>
+  </div>
+  
+</div>
+
+{% include 'base/footer.html' %}
+
+{% endblock %}

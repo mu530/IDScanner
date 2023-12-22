@@ -1,0 +1,81 @@
+{% extends 'base/base.html' %}
+{% block title %}Cafe Form{% endblock %}
+
+{% block content %}
+{% include 'base/header.html' with active_tab='cafe' %}
+{% include 'base/side_bar.html' with active_tab='cafe' %}
+
+{% load crispy_forms_tags %}
+
+<div class="container">
+  <div class="row" id="main">
+      <h1>Add Coupon to Students</h1>
+      <form method="post">
+          {% csrf_token %}
+
+          <div class="list-group dual-listbox-container m-3">
+            <div class="list-group-item active">
+              <h5 class="list-group-item-heading">Available Coupon</h5>
+              <input type="text" class="form-control search-input" placeholder="Search...">
+            </div>
+              <select name="coupons[]" id="coupons" multiple class="form-control">
+                  {% for coupon in coupons %}
+                      <option value="{{ coupon.id }}">{{ coupon.coupon_type }}</option>
+                  {% endfor %}
+              </select>
+          </div>
+
+          <div class="list-group dual-listbox-container m-3">
+            <div class="list-group-item active">
+              <h5 class="list-group-item-heading">Students</h5>
+              <input type="text" class="form-control search-input" placeholder="Search...">
+            </div>
+            <select name="students[]" id="students" multiple class="form-control">
+                {% for student in students %}
+                  <option value="{{ student.id }}" data-first-name="{{ student.first_name }}" data-last-name="{{ student.last_name }}" data-student-id="{{ student.student_id }}">{{ student.first_name }} {{ student.last_name }}</option>
+                {% endfor %}
+            </select>
+          </div>
+
+          <button name="student_coupon_submit" class="btn btn-primary" type="submit">Add Coupon to Selected Students</button>
+      </form>
+  </div>
+</div>
+
+{% block javascripts %}
+
+  <script>
+    var students = document.getElementById('students');
+    var coupons = document.getElementById('coupons');
+    var searchInputs = document.querySelectorAll('.search-input');
+
+    searchInputs.forEach(function(searchInput) {
+      searchInput.addEventListener('input', function() {
+        filterOptions(this, this.parentNode.nextElementSibling);
+      });
+    });
+
+    function filterOptions(searchInput, selectBox) {
+      var options = selectBox.getElementsByTagName('option');
+      var searchText = searchInput.value.toLowerCase();
+
+      for (var i = 0; i < options.length; i++) {
+        var optionText = options[i].text.toLowerCase();
+        var optionFirstName = options[i].getAttribute('data-first-name').toLowerCase();
+        var optionLastName = options[i].getAttribute('data-last-name').toLowerCase();
+        var optionStudentId = options[i].getAttribute('data-student-id');
+
+        if (optionText.includes(searchText) || optionFirstName.includes(searchText) || optionLastName.includes(searchText) || optionStudentId.includes(searchText)) {
+          options[i].style.display = '';
+        } else {
+          options[i].style.display = 'none';
+        }
+      }
+    }
+
+  </script>
+
+{% endblock javascripts %}
+
+{% include 'base/footer.html' %}
+{% endblock %}

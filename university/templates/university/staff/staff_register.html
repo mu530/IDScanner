@@ -1,0 +1,28 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Register Staffs{% endblock %}
+
+{% block content %}
+{% include 'base/header.html' with active_tab='staffs' %}
+
+{% include 'base/side_bar.html' with active_tab='staffs' %}
+
+
+{% load crispy_forms_tags %}
+
+<div class="container-sm d-flex justify-content-center my-3 py-3" id="main">
+
+  <form class="shadow p-5 mb-5 w-75 bg-body rounded" action={% url 'university:register-staff' %} method="POST" enctype="multipart/form-data" class="row g-3">
+    {% csrf_token %}
+    
+      {{ form | crispy }}
+    <button name="submit" class="btn btn-outline-danger" type="submit" id='submit'>Register</button>
+
+  </form>
+
+</div>
+
+
+{% include 'base/footer.html' %}
+
+{% endblock %}
